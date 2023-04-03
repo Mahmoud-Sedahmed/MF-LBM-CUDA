@@ -1,0 +1,8 @@
+Commented secitions:
+
+------------------------------------------------------------
+Geometry_preprocessing.cpp
+
+lines #432:461 (mpi_solid_bc_type , mpi_fluid_bc_type)
+This section was commented due to difference in the size and memory displacements inside the class (indirect_solid_boundary_nodes) due to difference in size of (neighbor_list)
+

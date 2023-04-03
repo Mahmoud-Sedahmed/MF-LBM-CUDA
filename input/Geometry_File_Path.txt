@@ -1,0 +1,3 @@
+geo_file_path_	input/geometry/bentheimer_in10_240_240_240_out10
+
+geo_boundary_file_path_	input/geometry/bentheimer_in10_240_240_240_out10
