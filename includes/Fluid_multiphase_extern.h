@@ -26,7 +26,7 @@ extern int Z_porous_plate;  // porous plate or membrane used to prevent one phas
 
 extern T_P rt2, rti2, la_nu2, la_nui2, phys_nu2;
 extern T_P phi_inlet;   // injecting fluid selection
-extern int outlet_phase1_sum;   // total fluid 1 nodes at the outlet(indicating breakthrough)
+extern long long outlet_phase1_sum;   // total fluid 1 nodes at the outlet(indicating breakthrough)
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~multiphase model ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 extern T_P RK_weight2; // R - K recolor scheme weight for diagonal directions

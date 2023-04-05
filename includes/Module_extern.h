@@ -54,7 +54,7 @@ extern int output_fieldData_precision_cmd;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~domain and geometry ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 extern T_P la_x, la_y, la_z;                                             // effective simulation domain dimension, in lattice units
-extern int nxGlobal, nyGlobal, nzGlobal;                                   // full grid : 1 to n ? Global
+extern long long nxGlobal, nyGlobal, nzGlobal;                                   // full grid : 1 to n ? Global
 
 extern int iper, jper, kper;                                                 //periodic BC indicator
 
@@ -63,7 +63,7 @@ extern int domain_wall_status_x_min, domain_wall_status_x_max;
 extern int domain_wall_status_y_min, domain_wall_status_y_max;
 extern int domain_wall_status_z_min, domain_wall_status_z_max;
 
-extern int nx_sample, ny_sample, nz_sample;     // rock sample size
+extern long long nx_sample, ny_sample, nz_sample;     // rock sample size
 
 extern int n_exclude_inlet, n_exclude_outlet;
 
@@ -72,13 +72,13 @@ extern T_P A_xy, A_xy_effective, volume_sample;   // Axy: cross section area
 extern int inlet_BC, outlet_BC;
 extern T_P target_inject_pore_volume;
 
-extern int n_fluid_node_local;  // total fluid nodes of local domain
+extern long long n_fluid_node_local;  // total fluid nodes of local domain
 
-extern int num_solid_boundary_global, num_solid_boundary;     // number of solid boundary nodes
-extern int num_fluid_boundary_global, num_fluid_boundary;      //number of fluid boundary nodes
+extern long long num_solid_boundary_global, num_solid_boundary;     // number of solid boundary nodes
+extern long long num_fluid_boundary_global, num_fluid_boundary;      //number of fluid boundary nodes
 
 extern int* pore_profile_z;                                    // used in IO for easier data process.
-extern int pore_sum, pore_sum_effective;                        // effeictive pore sum excludes inletand outlet portion
+extern long long pore_sum, pore_sum_effective;                        // effeictive pore sum excludes inletand outlet portion
 extern T_P porosity_full, porosity_effective;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~lattice ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -80,11 +80,11 @@ void read_parameter_multi() {
     READ_INT(FILE_simulation_control.c_str(), change_inlet_fluid_phase_cmd); // 
     cout << "change_inlet_fluid_phase_cmd:   " << change_inlet_fluid_phase_cmd << endl;
     cout << "---------------------------" << endl;
-    READ_INT(FILE_simulation_control.c_str(), nxGlobal); //  total nodes for the whole domain
+    READ_LONG_LONG(FILE_simulation_control.c_str(), nxGlobal); //  total nodes for the whole domain
     cout << "nxGlobal:   " << nxGlobal << endl;
-    READ_INT(FILE_simulation_control.c_str(), nyGlobal);
+    READ_LONG_LONG(FILE_simulation_control.c_str(), nyGlobal);
     cout << "nyGlobal:   " << nyGlobal << endl;
-    READ_INT(FILE_simulation_control.c_str(), nzGlobal);
+    READ_LONG_LONG(FILE_simulation_control.c_str(), nzGlobal);
     cout << "nzGlobal:   " << nzGlobal << endl;
     READ_INT(FILE_simulation_control.c_str(), n_exclude_inlet); // excluded_layers
     cout << "Inlet_excluded_layers:   " << n_exclude_inlet << endl;
@@ -304,7 +304,7 @@ void save_checkpoint(int save_option) { // ! option 0 - default location; option
 // ******************************* save data - phi *************************************
 void save_phi(int nt) {
 
-    int i, j, k;
+    long long i, j, k;
     /* File name */
     ostringstream flnm;
     flnm << "phi_nt" << setfill('0') << setw(9) << nt << "_id" << setfill('0') << setw(5) << 0;
@@ -361,7 +361,7 @@ void save_phi(int nt) {
 
 // ******************************* save data - macro variables *************************************
 void save_macro(int nt) {
-    int i, j, k;
+    long long i, j, k;
 
     compute_macro_vars();
 
@@ -377,9 +377,9 @@ void save_macro(int nt) {
     FILE* check_point_file = fopen(fnc, "wb+"); // open the file for the first time (create the file)
     if (check_point_file == NULL) { ERROR("Could not create save_checkpoint file!"); }
 
-    fwrite(&nxGlobal, sizeof(int), 1, check_point_file);
-    fwrite(&nyGlobal, sizeof(int), 1, check_point_file);
-    fwrite(&nzGlobal, sizeof(int), 1, check_point_file);
+    fwrite(&nxGlobal, sizeof(long long), 1, check_point_file);
+    fwrite(&nyGlobal, sizeof(long long), 1, check_point_file);
+    fwrite(&nzGlobal, sizeof(long long), 1, check_point_file);
 
 
     if (output_fieldData_precision_cmd == 0) { // single precision
@@ -498,7 +498,8 @@ void VTK_legacy_writer_3D(int nt, int vtk_type) {
 
     string fmt;
 
-    int i, j, k, l2, m2, n2, wall_indicator;
+    long long i, j, k, l2, m2, n2, domainSize;
+    int wall_indicator;
 
     T_P* dd = nullptr, * ff = nullptr, * utt = nullptr, * vtt = nullptr, * wtt = nullptr;
     float* ff4 = nullptr;   // single precision
@@ -506,17 +507,18 @@ void VTK_legacy_writer_3D(int nt, int vtk_type) {
     l2 = nxGlobal;
     m2 = nyGlobal;
     n2 = nzGlobal;
+    domainSize = l2 * m2 * n2;
 
     // vtk_type 1: full flow field info for detailed analysis with options to save single / double precision data
     // vtk_type 2 : phase field info, single precision only
     // vtk_type 3 : force vectors from the CSF model with options to save single / double precision data
 
     if (vtk_type == 1 || vtk_type == 3) {
-        dd = (T_P*)calloc(l2 * m2 * n2, sizeof(T_P));
-        ff = (T_P*)calloc(l2 * m2 * n2, sizeof(T_P));
-        utt = (T_P*)calloc(l2 * m2 * n2, sizeof(T_P));
-        vtt = (T_P*)calloc(l2 * m2 * n2, sizeof(T_P));
-        wtt = (T_P*)calloc(l2 * m2 * n2, sizeof(T_P));
+        dd = (T_P*)calloc(domainSize, sizeof(T_P));
+        ff = (T_P*)calloc(domainSize, sizeof(T_P));
+        utt = (T_P*)calloc(domainSize, sizeof(T_P));
+        vtt = (T_P*)calloc(domainSize, sizeof(T_P));
+        wtt = (T_P*)calloc(domainSize, sizeof(T_P));
 
 
         if (vtk_type == 1) {
@@ -553,7 +555,7 @@ void VTK_legacy_writer_3D(int nt, int vtk_type) {
 
     }
     else if (vtk_type == 2) { // phase field info, with single precision to save space
-        ff4 = (float*)calloc(l2 * m2 * n2, sizeof(float));
+        ff4 = (float*)calloc(domainSize, sizeof(float));
 
         for (k = 1; k <= nzGlobal; k++) {
             for (j = 1; j <= nyGlobal; j++) {
@@ -714,14 +716,16 @@ void VTK_legacy_writer_3D(int nt, int vtk_type) {
 //used in 2D micromodel simulation by averaging phi along y(depth) direction
 void VTK_phi_2d_micromodel(int nt) {
     float* ff;
-    int i, j, k, l2, m2, n2, wall_indicator;
+    long long i, j, k, l2, m2, n2, domainSize;
+    int wall_indicator;
     T_P tmp;
 
     l2 = nxGlobal;
     m2 = nyGlobal;
     n2 = nzGlobal;
+    domainSize = l2 * m2 * n2;
 
-    ff = (float*)calloc(l2 * m2 * n2, sizeof(float));
+    ff = (float*)calloc(domainSize, sizeof(float));
     // [(i - 1) + l2 * ((j - 1) + m2 * (k - 1))]
 
     for (k = 1; k <= nzGlobal; k++) {
@@ -791,7 +795,7 @@ void VTK_phi_2d_micromodel(int nt) {
 
 /* ****************** save geometry VTK *********************** */
 void VTK_walls_bin() {  // solid geometry
-    int i, j, k;
+    long long i, j, k;
     bool ALIVE;
 
     string filepath = "results/out3.field_data/walls_bin.vtk";

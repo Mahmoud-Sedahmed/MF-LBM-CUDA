@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+*.d
+*.dat
+/MF_LBM_CUDA
+/job_status.txt
+/results

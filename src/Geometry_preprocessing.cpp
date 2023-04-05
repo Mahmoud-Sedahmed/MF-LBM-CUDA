@@ -35,11 +35,11 @@ void geometry_preprocessing_new() {
 
     int i_max_iteration = 4; // smoothing iterations
 
-    int tmp_ghost_layers = 10;  // (6 + 4 , 6: used for smoothing operations , 4: additional layers used for solid/fluid boundary nodes that outside the domain)
+    long long tmp_ghost_layers = 10;  // (6 + 4 , 6: used for smoothing operations , 4: additional layers used for solid/fluid boundary nodes that outside the domain)
 
-    int tmp_nx_gh = nxGlobal + 2 * tmp_ghost_layers;
-    int tmp_ny_gh = nyGlobal + 2 * tmp_ghost_layers;
-    int tmp_nz_gh = nzGlobal + 2 * tmp_ghost_layers;
+    long long tmp_nx_gh = nxGlobal + 2 * tmp_ghost_layers;
+    long long tmp_ny_gh = nyGlobal + 2 * tmp_ghost_layers;
+    long long tmp_nz_gh = nzGlobal + 2 * tmp_ghost_layers;
     long long tmp_num_cells_gh = tmp_nx_gh * tmp_ny_gh * tmp_nz_gh;
 
     T_P* walls_smooth_1 = (T_P*)calloc(tmp_num_cells_gh, sizeof(T_P));
@@ -47,9 +47,9 @@ void geometry_preprocessing_new() {
     int* walls_temp1 = (int*)calloc(tmp_num_cells_gh, sizeof(int));
 
     // copy walls information from walls to walls_temp1
-    for (int k = 1; k <= nzGlobal; k++) {
-        for (int j = 1; j <= nyGlobal; j++) {
-            for (int i = 1; i <= nxGlobal; i++) {
+    for (long long k = 1; k <= nzGlobal; k++) {
+        for (long long j = 1; j <= nyGlobal; j++) {
+            for (long long i = 1; i <= nxGlobal; i++) {
                 walls_temp1[i_s_TMP_10(i, j, k)] = walls[i_s2(i, j, k)];
             }
         }
@@ -57,24 +57,24 @@ void geometry_preprocessing_new() {
 
     // consider periodic/non-periodic BCs in ghost layers
     if (kper == 0) {// z direction, not periodic
-        for (int j = 1; j <= nyGlobal; j++) {
-            for (int i = 1; i <= nxGlobal; i++) {
-                for (int k = 1 - tmp_ghost_layers; k <= 0; k++) {
+        for (long long j = 1; j <= nyGlobal; j++) {
+            for (long long i = 1; i <= nxGlobal; i++) {
+                for (long long k = 1 - tmp_ghost_layers; k <= 0; k++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i, j, 1)];
                 }
-                for (int k = nzGlobal + 1; k <= nzGlobal + tmp_ghost_layers; k++) {
+                for (long long k = nzGlobal + 1; k <= nzGlobal + tmp_ghost_layers; k++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i, j, nzGlobal)];
                 }
             }
         }
     }
     else { // z direction, periodic
-        for (int j = 1; j <= nyGlobal; j++) {
-            for (int i = 1; i <= nxGlobal; i++) {
-                for (int k = 1 - tmp_ghost_layers; k <= 0; k++) {
+        for (long long j = 1; j <= nyGlobal; j++) {
+            for (long long i = 1; i <= nxGlobal; i++) {
+                for (long long k = 1 - tmp_ghost_layers; k <= 0; k++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i, j, nzGlobal + k)]; // nzglobal-ghost_layers+1:nzglobal
                 }
-                for (int k = nzGlobal + 1; k <= nzGlobal + tmp_ghost_layers; k++) {
+                for (long long k = nzGlobal + 1; k <= nzGlobal + tmp_ghost_layers; k++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i, j, k - nzGlobal)];
                 }
             }
@@ -82,24 +82,24 @@ void geometry_preprocessing_new() {
     }
 
     if (jper == 0) { // y direction, not periodic 
-        for (int k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
-            for (int i = 1; i <= nxGlobal; i++) {
-                for (int j = 1 - tmp_ghost_layers; j <= 0; j++) {
+        for (long long k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
+            for (long long i = 1; i <= nxGlobal; i++) {
+                for (long long j = 1 - tmp_ghost_layers; j <= 0; j++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i, 1, k)];
                 }
-                for (int j = nyGlobal + 1; j <= nyGlobal + tmp_ghost_layers; j++) {
+                for (long long j = nyGlobal + 1; j <= nyGlobal + tmp_ghost_layers; j++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i, nyGlobal, k)];
                 }
             }
         }
     }
     else { // y direction,periodic 
-        for (int k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
-            for (int i = 1; i <= nxGlobal; i++) {
-                for (int j = 1 - tmp_ghost_layers; j <= 0; j++) {
+        for (long long k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
+            for (long long i = 1; i <= nxGlobal; i++) {
+                for (long long j = 1 - tmp_ghost_layers; j <= 0; j++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i, nyGlobal + j, k)];
                 }
-                for (int j = nyGlobal + 1; j <= nyGlobal + tmp_ghost_layers; j++) {
+                for (long long j = nyGlobal + 1; j <= nyGlobal + tmp_ghost_layers; j++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i, j - nyGlobal, k)];
                 }
             }
@@ -107,24 +107,24 @@ void geometry_preprocessing_new() {
     }
 
     if (iper == 0) { // x direction, not periodic
-        for (int k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
-            for (int j = 1 - tmp_ghost_layers; j <= nyGlobal + tmp_ghost_layers; j++) {
-                for (int i = 1 - tmp_ghost_layers; i <= 0; i++) {
+        for (long long k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
+            for (long long j = 1 - tmp_ghost_layers; j <= nyGlobal + tmp_ghost_layers; j++) {
+                for (long long i = 1 - tmp_ghost_layers; i <= 0; i++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(1, j, k)];
                 }
-                for (int i = nxGlobal + 1; i <= nxGlobal + tmp_ghost_layers; i++) {
+                for (long long i = nxGlobal + 1; i <= nxGlobal + tmp_ghost_layers; i++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(nxGlobal, j, k)];
                 }
             }
         }
     }
     else { // x direction, periodic
-        for (int k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
-            for (int j = 1 - tmp_ghost_layers; j <= nyGlobal + tmp_ghost_layers; j++) {
-                for (int i = 1 - tmp_ghost_layers; i <= 0; i++) {
+        for (long long k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
+            for (long long j = 1 - tmp_ghost_layers; j <= nyGlobal + tmp_ghost_layers; j++) {
+                for (long long i = 1 - tmp_ghost_layers; i <= 0; i++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(nxGlobal + i, j, k)];
                 }
-                for (int i = nxGlobal + 1; i <= nxGlobal + tmp_ghost_layers; i++) {
+                for (long long i = nxGlobal + 1; i <= nxGlobal + tmp_ghost_layers; i++) {
                     walls_temp1[i_s_TMP_10(i, j, k)] = walls_temp1[i_s_TMP_10(i - nxGlobal, j, k)];
                 }
             }
@@ -132,18 +132,18 @@ void geometry_preprocessing_new() {
     }
 
     // copy walls information (including ghost layers) from (walls_temp1) to (walls)
-    for (int k = 1 - 2; k <= nzGlobal + 2; k++) {
-        for (int j = 1 - 2; j <= nyGlobal + 2; j++) {
-            for (int i = 1 - 2; i <= nxGlobal + 2; i++) {
+    for (long long k = 1 - 2; k <= nzGlobal + 2; k++) {
+        for (long long j = 1 - 2; j <= nyGlobal + 2; j++) {
+            for (long long i = 1 - 2; i <= nxGlobal + 2; i++) {
                 walls[i_s2(i, j, k)] = walls_temp1[i_s_TMP_10(i, j, k)];
             }
         }
     }
 
     // copy data from walls_temp1 to walls_smooth_1 and walls_smooth_2 (including ghost layers)
-    for (int k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
-        for (int j = 1 - tmp_ghost_layers; j <= nyGlobal + tmp_ghost_layers; j++) {
-            for (int i = 1 - tmp_ghost_layers; i <= nxGlobal + tmp_ghost_layers; i++) {
+    for (long long k = 1 - tmp_ghost_layers; k <= nzGlobal + tmp_ghost_layers; k++) {
+        for (long long j = 1 - tmp_ghost_layers; j <= nyGlobal + tmp_ghost_layers; j++) {
+            for (long long i = 1 - tmp_ghost_layers; i <= nxGlobal + tmp_ghost_layers; i++) {
                 walls_smooth_1[i_s_TMP_10(i, j, k)] = T_P(walls_temp1[i_s_TMP_10(i, j, k)]);
                 walls_smooth_2[i_s_TMP_10(i, j, k)] = T_P(walls_temp1[i_s_TMP_10(i, j, k)]);
             }
@@ -151,9 +151,9 @@ void geometry_preprocessing_new() {
     }
 
     // extend wall information: change walls_temp1 values to (2) for solid boundary nodes or (-1) for fluid boundary nodes
-    for (int k = 1 - tmp_ghost_layers + 1; k <= nzGlobal + tmp_ghost_layers - 1; k++) {
-        for (int j = 1 - tmp_ghost_layers + 1; j <= nyGlobal + tmp_ghost_layers - 1; j++) {
-            for (int i = 1 - tmp_ghost_layers + 1; i <= nxGlobal + tmp_ghost_layers - 1; i++) {
+    for (long long k = 1 - tmp_ghost_layers + 1; k <= nzGlobal + tmp_ghost_layers - 1; k++) {
+        for (long long j = 1 - tmp_ghost_layers + 1; j <= nyGlobal + tmp_ghost_layers - 1; j++) {
+            for (long long i = 1 - tmp_ghost_layers + 1; i <= nxGlobal + tmp_ghost_layers - 1; i++) {
                 if (walls_temp1[i_s_TMP_10(i, j, k)] == 1) { // solid node
                     for (int n = 1; n <= 18; n++) {
                         if (walls_temp1[i_s_TMP_10(i + ex[n], j + ey[n], k + ez[n])] <= 0) { // check if neighbor is a fluid node (solid boundary node)
@@ -175,9 +175,9 @@ void geometry_preprocessing_new() {
     }
 
     // copy new walls information from (walls_temp1) to (walls_type)
-    for (int k = 1 - 4; k <= nzGlobal + 4; k++) {
-        for (int j = 1 - 4; j <= nyGlobal + 4; j++) {
-            for (int i = 1 - 4; i <= nxGlobal + 4; i++) {
+    for (long long k = 1 - 4; k <= nzGlobal + 4; k++) {
+        for (long long j = 1 - 4; j <= nyGlobal + 4; j++) {
+            for (long long i = 1 - 4; i <= nxGlobal + 4; i++) {
                 walls_type[i_s4(i, j, k)] = walls_temp1[i_s_TMP_10(i, j, k)];
             }
         }
@@ -185,9 +185,9 @@ void geometry_preprocessing_new() {
 
     // smooth the geometry from walls_smooth_2 and save in walls_smooth_1 
     for (int iteration = 1; iteration <= i_max_iteration; iteration++) {
-        for (int k = 1 - tmp_ghost_layers + 1; k <= nzGlobal + tmp_ghost_layers - 1; k++) {
-            for (int j = 1 - tmp_ghost_layers + 1; j <= nyGlobal + tmp_ghost_layers - 1; j++) {
-                for (int i = 1 - tmp_ghost_layers + 1; i <= nxGlobal + tmp_ghost_layers - 1; i++) {
+        for (long long k = 1 - tmp_ghost_layers + 1; k <= nzGlobal + tmp_ghost_layers - 1; k++) {
+            for (long long j = 1 - tmp_ghost_layers + 1; j <= nyGlobal + tmp_ghost_layers - 1; j++) {
+                for (long long i = 1 - tmp_ghost_layers + 1; i <= nxGlobal + tmp_ghost_layers - 1; i++) {
                     walls_smooth_2[i_s_TMP_10(i, j, k)] = prc(0.);
                     for (int n = 0; n <= 26; n++) {
                         int m = iex[n] * iex[n] + iey[n] * iey[n] + iez[n] * iez[n];
@@ -196,9 +196,9 @@ void geometry_preprocessing_new() {
                 }
             }
         }
-        for (int k = 1 - tmp_ghost_layers + 1; k <= nzGlobal + tmp_ghost_layers - 1; k++) {
-            for (int j = 1 - tmp_ghost_layers + 1; j <= nyGlobal + tmp_ghost_layers - 1; j++) {
-                for (int i = 1 - tmp_ghost_layers + 1; i <= nxGlobal + tmp_ghost_layers - 1; i++) {
+        for (long long k = 1 - tmp_ghost_layers + 1; k <= nzGlobal + tmp_ghost_layers - 1; k++) {
+            for (long long j = 1 - tmp_ghost_layers + 1; j <= nyGlobal + tmp_ghost_layers - 1; j++) {
+                for (long long i = 1 - tmp_ghost_layers + 1; i <= nxGlobal + tmp_ghost_layers - 1; i++) {
                     walls_smooth_1[i_s_TMP_10(i, j, k)] = walls_smooth_2[i_s_TMP_10(i, j, k)];
                 }
             }
@@ -208,9 +208,9 @@ void geometry_preprocessing_new() {
     num_solid_boundary_global = 0;
     num_fluid_boundary_global = 0;
 
-    for (int k = 1 - 4; k <= nzGlobal + 4; k++) { // smoothing process includs overlap_phi region used for cnx, cny, cnz calcaulation
-        for (int j = 1 - 4; j <= nyGlobal + 4; j++) {
-            for (int i = 1 - 4; i <= nxGlobal + 4; i++) {
+    for (long long k = 1 - 4; k <= nzGlobal + 4; k++) { // smoothing process includs overlap_phi region used for cnx, cny, cnz calcaulation
+        for (long long j = 1 - 4; j <= nyGlobal + 4; j++) {
+            for (long long i = 1 - 4; i <= nxGlobal + 4; i++) {
                 if (walls_temp1[i_s_TMP_10(i, j, k)] == 2) {
                     num_solid_boundary_global++;
                 }
@@ -226,9 +226,9 @@ void geometry_preprocessing_new() {
 
     // Calculate nw
    
-    for (int k = 1 - 4; k <= nzGlobal + 4; k++) {
-        for (int j = 1 - 4; j <= nyGlobal + 4; j++) {
-            for (int i = 1 - 4; i <= nxGlobal + 4; i++) {
+    for (long long k = 1 - 4; k <= nzGlobal + 4; k++) {
+        for (long long j = 1 - 4; j <= nyGlobal + 4; j++) {
+            for (long long i = 1 - 4; i <= nxGlobal + 4; i++) {
                 if (walls_temp1[i_s_TMP_10(i, j, k)] == -1) {
                     T_P nwx = ISO8[1 - 1] * (walls_smooth_2[i_s_TMP_10(i + 1, j, k)] - walls_smooth_2[i_s_TMP_10(i - 1, j, k)]) +
 
@@ -387,9 +387,9 @@ void geometry_preprocessing_new() {
 
     /* calculate (num_solid_boundary) and (num_fluid_boundary) */
     num_solid_boundary = num_fluid_boundary = 0;
-    for (int k = 1 - 3; k <= nzGlobal + 3; k++) { 
-        for (int j = 1 - 3; j <= nyGlobal + 3; j++) {
-            for (int i = 1 - 3; i <= nxGlobal + 3; i++) {
+    for (long long k = 1 - 3; k <= nzGlobal + 3; k++) {
+        for (long long j = 1 - 3; j <= nyGlobal + 3; j++) {
+            for (long long i = 1 - 3; i <= nxGlobal + 3; i++) {
                 if (walls_temp1[i_s_TMP_10(i, j, k)] == 2) {
                     num_solid_boundary++;
                 }
@@ -418,8 +418,8 @@ void geometry_preprocessing_load() {
 
     geom_file = fopen(fnc, "r");
     if (geom_file == NULL) { ERROR("Could not open the precomputed boundary info file! Existing Program!"); }
-    if (!fread(&num_solid_boundary_global, sizeof(int), 1, geom_file)) { ERROR("Could not load from data precomputed boundary info file!"); }
-    if (!fread(&num_fluid_boundary_global, sizeof(int), 1, geom_file)) { ERROR("Could not load from data precomputed boundary info file!"); }
+    if (!fread(&num_solid_boundary_global, sizeof(long long), 1, geom_file)) { ERROR("Could not load from data precomputed boundary info file!"); }
+    if (!fread(&num_fluid_boundary_global, sizeof(long long), 1, geom_file)) { ERROR("Could not load from data precomputed boundary info file!"); }
     cout << "total number of solid boundary nodes= " << num_solid_boundary_global;
     cout << "total number of fluid boundary nodes= " << num_fluid_boundary_global;
 

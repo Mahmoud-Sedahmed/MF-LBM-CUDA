@@ -61,7 +61,7 @@ int output_fieldData_precision_cmd;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~domain and geometry ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T_P la_x, la_y, la_z;                                             // effective simulation domain dimension, in lattice units
-int nxGlobal, nyGlobal, nzGlobal;                                   // full grid : 1 to n ? Global
+long long nxGlobal, nyGlobal, nzGlobal;                                   // full grid : 1 to n ? Global
 
 int iper, jper, kper;                                                 //periodic BC indicator
 
@@ -70,7 +70,7 @@ int domain_wall_status_x_min, domain_wall_status_x_max;
 int domain_wall_status_y_min, domain_wall_status_y_max;
 int domain_wall_status_z_min, domain_wall_status_z_max;
 
-int nx_sample, ny_sample, nz_sample;     // rock sample size
+long long nx_sample, ny_sample, nz_sample;     // rock sample size
 
 int n_exclude_inlet, n_exclude_outlet;
 
@@ -80,14 +80,14 @@ T_P A_xy, A_xy_effective, volume_sample;   // Axy: cross section area
 int inlet_BC, outlet_BC;
 T_P target_inject_pore_volume;
 
-int n_fluid_node_local;  // total fluid nodes of local domain
+long long n_fluid_node_local;  // total fluid nodes of local domain
 
-int num_solid_boundary_global, num_solid_boundary;     // number of solid boundary nodes
-int num_fluid_boundary_global, num_fluid_boundary;      //number of fluid boundary nodes
+long long num_solid_boundary_global, num_solid_boundary;     // number of solid boundary nodes
+long long num_fluid_boundary_global, num_fluid_boundary;      //number of fluid boundary nodes
 
 int* pore_profile_z;                                    // used in IO for easier data process.
 
-int pore_sum, pore_sum_effective;                        // effeictive pore sum excludes inletand outlet portion
+long long pore_sum, pore_sum_effective;                        // effeictive pore sum excludes inletand outlet portion
 T_P porosity_full, porosity_effective;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~lattice ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

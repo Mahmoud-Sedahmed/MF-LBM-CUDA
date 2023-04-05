@@ -16,7 +16,7 @@
 //=======================================================================================================================================================
 void monitor() {
     T_P* fl1_0, * fl2_0, * pre_0, * mass1_0, * mass2_0, * vol1_0, * vol2_0;
-    int i, j, k;
+    long long i, j, k;
     int wall_indicator;
     T_P umax, temp, temp1, temp2, temp3, temp4, temp5, temp6, usq1, usq2;
     T_P prek, fl1_avg, fl2_avg, fl_avg, fl1_avg_whole, fl2_avg_whole, fl_avg_whole;
@@ -79,13 +79,13 @@ void monitor() {
         mass2[i_s0(k, 1, 1)] = temp6;
     }
 
-    fl1_0 = (T_P*)calloc(nzGlobal, sizeof(T_P));
-    fl2_0 = (T_P*)calloc(nzGlobal, sizeof(T_P));
-    vol1_0 = (T_P*)calloc(nzGlobal, sizeof(T_P));
-    vol2_0 = (T_P*)calloc(nzGlobal, sizeof(T_P));
-    mass1_0 = (T_P*)calloc(nzGlobal, sizeof(T_P));
-    mass2_0 = (T_P*)calloc(nzGlobal, sizeof(T_P));
-    pre_0 = (T_P*)calloc(nzGlobal, sizeof(T_P));
+    fl1_0 = (T_P*)calloc(int(nzGlobal), sizeof(T_P));
+    fl2_0 = (T_P*)calloc(int(nzGlobal), sizeof(T_P));
+    vol1_0 = (T_P*)calloc(int(nzGlobal), sizeof(T_P));
+    vol2_0 = (T_P*)calloc(int(nzGlobal), sizeof(T_P));
+    mass1_0 = (T_P*)calloc(int(nzGlobal), sizeof(T_P));
+    mass2_0 = (T_P*)calloc(int(nzGlobal), sizeof(T_P));
+    pre_0 = (T_P*)calloc(int(nzGlobal), sizeof(T_P));
 
     for (k = 1; k <= nzGlobal; k++) {
         fl1_0[i_s0(k, 1, 1)] += fl1[i_s0(k, 1, 1)];
@@ -277,7 +277,7 @@ void monitor() {
 //===============================================================================================================================================
 //*******************************monitor_multiphase steady flow - based on phase field * ************************************
 void monitor_multiphase_steady_phasefield() {
-    int i, j, k;
+    long long i, j, k;
     int wall_indicator;
     T_P tmp1, tmp2;
     T_P umax, d_phi_max, d_phi_max_global;
@@ -352,7 +352,7 @@ void monitor_multiphase_steady_phasefield() {
 
 // *************************** monitor_multiphase steady flow - based on capillary pressure **********************************
 void monitor_multiphase_steady_capillarypressure() {
-    int i, j, k, i_w, i_nw, i_w_sum, i_nw_sum;
+    long long i, j, k, i_w, i_nw, i_w_sum, i_nw_sum;
     int wall_indicator;
     T_P umax, temp, pre_w, pre_nw, pre_w_sum, pre_nw_sum, pc;
 
@@ -445,7 +445,7 @@ void monitor_multiphase_steady_capillarypressure() {
 //=========================================================================================================================================== =
 //*******************************monitor_breakthrough * ************************************
 void monitor_breakthrough() {
-    int i, j, obs_z, itemp;
+    long long i, j, obs_z, itemp;
 
     itemp = 0;
 
@@ -470,7 +470,7 @@ void monitor_breakthrough() {
 
 //*******************************calculate saturationm*************************************
 void cal_saturation() {
-    int i, j, k;
+    long long i, j, k;
     int wall_indicator;
     T_P v1, v2;
 

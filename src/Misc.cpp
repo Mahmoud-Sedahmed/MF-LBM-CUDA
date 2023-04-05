@@ -64,9 +64,9 @@ void set_walls() {
     // ~~~~~~~~~~~~~~~~specify channel walls for the global wall array ~~~~~~~~~~~~~~~~~~~~
     // walls = 1: solid;  walls = 0: fluid
 
-    for (int k = 1; k <= nzGlobal; k++) {
-        for (int j = 1; j <= nyGlobal; j++) {
-            for (int i = 1; i <= nxGlobal; i++) {
+    for (long long k = 1; k <= nzGlobal; k++) {
+        for (long long j = 1; j <= nyGlobal; j++) {
+            for (long long i = 1; i <= nxGlobal; i++) {
                 if (domain_wall_status_z_min == 1) { walls_global[i_s0(i, j, 1)] = 1; }
                 if (domain_wall_status_z_max == 1) { walls_global[i_s0(i, j, nzGlobal)] = 1; }
                 if (domain_wall_status_x_min == 1) { walls_global[i_s0(1, j, k)] = 1; }
@@ -78,18 +78,18 @@ void set_walls() {
     }
 
     /* copy the walls data from (walls_global) to (walls) */
-    for (int k = 1; k <= nzGlobal; k++) {
-        for (int j = 1; j <= nyGlobal; j++) {
-            for (int i = 1; i <= nxGlobal; i++) {
+    for (long long k = 1; k <= nzGlobal; k++) {
+        for (long long j = 1; j <= nyGlobal; j++) {
+            for (long long i = 1; i <= nxGlobal; i++) {
                 walls[i_s2(i, j, k)] = walls_type[i_s4(i, j, k)] = walls_global[i_s0(i, j, k)];
             }
         }
     }
 
     // ~~~~~~~~~~~~~~~~ calculate open area at inlet ~~~~~~~~~~~~~~~~~~~~
-    int icount = 0;
-    for (int j = 1; j <= nyGlobal; j++) {
-        for (int i = 1; i <= nxGlobal; i++) {
+    long long icount = 0;
+    for (long long j = 1; j <= nyGlobal; j++) {
+        for (long long i = 1; i <= nxGlobal; i++) {
             if (walls_global[i_s0(i, j, 1)] <= 0) {
                 icount++;
             }
@@ -104,7 +104,7 @@ void set_walls() {
 // ************************** modify geometry *******************************
 void modify_geometry() {
 
-    int i, j, k, buffer;
+    long long i, j, k, buffer;
     double xc, yc, zc, r1, r2;
     // walls = 1: solid;  walls = 0: fluid
     // below is a sample code to modify geometry
@@ -137,16 +137,16 @@ void modify_geometry() {
 
 // ***************************** read walls ************************************
 void read_walls() {
-    int i, j, k;
+    long long i, j, k;
 
 
     const char* fnc = geo_file_path.c_str();
     FILE* geom_file = fopen(fnc, "r");
     if (geom_file == NULL) { ERROR("Could not open the geometry file !"); }
 
-    if(!fread(&nx_sample, sizeof(int), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
-    if (!fread(&ny_sample, sizeof(int), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
-    if(!fread(&nz_sample, sizeof(int), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+    if(!fread(&nx_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+    if (!fread(&ny_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+    if(!fread(&nz_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
 
     cout << "Porous media sample size: nx = " << nx_sample << ", ny = " << ny_sample << ", nz = " << nz_sample << endl;
 
@@ -188,10 +188,10 @@ void pore_profile() {
 
     pore_profile_z = (int*)calloc(nzGlobal, sizeof(int));
 
-    for (int k = 1; k <= nzGlobal; k++) {
+    for (long long k = 1; k <= nzGlobal; k++) {
         pore_profile_z[k - 1] = 0;
-        for (int j = 1; j <= nyGlobal; j++) {
-            for (int i = 1; i <= nxGlobal; i++) {
+        for (long long j = 1; j <= nyGlobal; j++) {
+            for (long long i = 1; i <= nxGlobal; i++) {
                 if (walls[i_s2(i, j, k)] <= 0) {
                     pore_profile_z[k - 1] += 1;
                 }
@@ -212,7 +212,7 @@ void pore_profile() {
 //----------------------compute macroscopic varaibles from PDFs----------------------
 //===================================================================================================================================== =
 void compute_macro_vars() { // u,v,w,rho   (phi already known)
-    int i, j, k;
+    long long i, j, k;
     int wall_indicator;
     T_P ft0, ft1, ft2, ft3, ft4, ft5, ft6, ft7, ft8, ft9, ft10, ft11, ft12, ft13, ft14, ft15, ft16, ft17, ft18, fx, fy, fz, tmp;
 
@@ -268,7 +268,7 @@ void compute_macro_vars() { // u,v,w,rho   (phi already known)
 // ************* change inlet fluid phase *********************************************************
 void change_inlet_fluid_phase() {
 
-    int i, j, k, z;
+    long long i, j, k, z;
 
     if (change_inlet_fluid_phase_cmd == 1) {
         for (k = 1 - 1; k <= nzGlobal + 1; k++) {
@@ -378,7 +378,7 @@ void change_inlet_fluid_phase() {
 // *************inlet velocity - analytical solution**********************************************************
 void inlet_vel_profile_rectangular(T_P vel_avg, int num_terms) {
     T_P a, b, xx, yy, tmp1, tmp2, tmp3;
-    int n, i, j, x, y;
+    long long n, i, j, x, y;
 
     a = prc(0.5) * la_x;
     b = prc(0.5) * la_y;

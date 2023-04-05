@@ -26,7 +26,7 @@ int Z_porous_plate;  // porous plate or membrane used to prevent one phase from 
 
 T_P rt2, rti2, la_nu2, la_nui2, phys_nu2;
 T_P phi_inlet;   // injecting fluid selection
-int outlet_phase1_sum;   // total fluid 1 nodes at the outlet(indicating breakthrough)
+long long outlet_phase1_sum;   // total fluid 1 nodes at the outlet(indicating breakthrough)
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~multiphase model ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T_P RK_weight2 = prc(1.) / prc(sqrt)(prc(2.)) / prc(36.); // R - K recolor scheme weight for diagonal directions

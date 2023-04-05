@@ -256,8 +256,9 @@ void initialization_basic_multi() {
 
 // ~~~~~~~~~~~~~~~~~~~~~open velocity inlet BC initialization~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void initialization_open_velocity_inlet_BC() {
-    int x, y;
-    int i, j, n_vin;
+    long long x, y;
+    long long i, j;
+    int n_vin;
 
     uin_avg_0 = ca_0 * lbm_gamma / la_nu1;            // common definition
     uin_avg = uin_avg_0;
@@ -296,7 +297,7 @@ void initialization_open_velocity_inlet_BC() {
 //----------------------initialization for new simulation - field variables----------------------
 //=====================================================================================================================================
 void initialization_new_multi() {
-    int i, j, k;
+    long long i, j, k;
     T_P x, y, z, random;
 
     ntime0 = 1;
@@ -386,7 +387,7 @@ void initialization_new_multi() {
 
 // initial particle distribution functions
 void initialization_new_multi_pdf() {
-    int i, j, k;
+    long long i, j, k;
     T_P usqrt, rho1, rho2;
 
     for (k = 1 - 1; k <= nzGlobal + 1; k++) {
@@ -602,7 +603,7 @@ void MemAllocate_multi(int flag) {
         vol1 = (T_P*)calloc(nzGlobal, sizeof(T_P));
         vol2 = (T_P*)calloc(nzGlobal, sizeof(T_P));
 
-        int tk_isize = 7 * nzGlobal + 3;
+        int tk_isize = 7 * int(nzGlobal) + 3;
         tk = (T_P*)calloc(tk_isize, sizeof(T_P));   // !isize = 5 * nz + 1          !fl1, fl2, pre, mass1, mass2, vol1, vol2 + umax + usq1 + usq2(kinetic energy)
     }
     else {

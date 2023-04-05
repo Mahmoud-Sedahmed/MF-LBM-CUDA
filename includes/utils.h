@@ -6,6 +6,7 @@
 void  errhandler(int nLine, const char* File, const char* err_string);
 
 #define READ_INT( szFileName, VarName)		read_int( szFileName, #VarName, &(VarName) )
+#define READ_LONG_LONG( szFileName, VarName)		read_long_long( szFileName, #VarName, &(VarName) )
 #define READ_FLOAT( szFileName, VarName)	read_float( szFileName, #VarName, &(VarName) )
 #define READ_DOUBLE( szFileName, VarName)	read_double( szFileName, #VarName, &(VarName) )
 #define READ_STRING( szFileName, VarName)	read_string( szFileName, #VarName,  (VarName) )
@@ -13,6 +14,9 @@ void  errhandler(int nLine, const char* File, const char* err_string);
 
 /* Read an int variable from the simulation setup file */
 void read_int(const string& sim_par_file_name, const string varName, int* int_variable);
+
+/* Read an long long variable from the simulation setup file */
+void read_long_long(const string& sim_par_file_name, const string varName, long long* long_long_variable);
 
 /* Read a float variable from the simulation setup file */
 void read_float(const string& sim_par_file_name, const string varName, float* float_variable);

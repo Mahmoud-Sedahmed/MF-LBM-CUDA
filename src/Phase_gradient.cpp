@@ -13,7 +13,7 @@
 //----------------------calculate color gradient----------------------
 //=====================================================================================================================================
 void color_gradient() {
-    int i, j, k, overlap_temp;
+    long long i, j, k, overlap_temp;
     T_P kxx, kxy, kxz, kyx, kyy, kyz, kzx, kzy, kzz;
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~ extrapolate phi values to solid boundary nodes ~~~~~~~~~~~~~~~~~~ */
@@ -24,9 +24,9 @@ void color_gradient() {
                 if (node_type_loc == 2) { // solid boundary node
                     T_P phi_sum = prc(0.), weight_sum = prc(0.);
                     for (int q = 1; q < 19; q++) {
-                        int iex = i + ex[q];
-                        int iey = j + ey[q];
-                        int iez = k + ez[q];
+                        long long iex = i + ex[q];
+                        long long iey = j + ey[q];
+                        long long iez = k + ez[q];
                         int node_type_neb = walls_type[i_s4(iex, iey, iez)];
                         if (node_type_neb <= 0) {
                             phi_sum += phi[i_s4(iex, iey, iez)] * w_equ[q];
@@ -101,9 +101,9 @@ void color_gradient() {
                 if (node_type_loc == 2) { // solid boundary node
                     T_P cn_x_sum = prc(0.), cn_y_sum = prc(0.), cn_z_sum = prc(0.), weight_sum = prc(0.);
                     for (int q = 1; q < 19; q++) {
-                        int iex = i + ex[q];
-                        int iey = j + ey[q];
-                        int iez = k + ez[q];
+                        long long iex = i + ex[q];
+                        long long iey = j + ey[q];
+                        long long iez = k + ez[q];
                         int node_type_neb = walls_type[i_s4(iex, iey, iez)];
                         if (node_type_neb <= 0) {
                             cn_x_sum += cn_x[i_s2(iex, iey, iez)] * w_equ[q];
@@ -221,7 +221,7 @@ void color_gradient() {
 
 // alter solid surface normal directions to control wettability
 void alter_color_gradient_solid_surface() {
-    int i, j, k, iteration, iteration_max;
+    long long i, j, k, iteration, iteration_max;
     T_P nwx, nwy, nwz, lambda, local_eps;
     T_P vcx0, vcy0, vcz0, vcx1, vcy1, vcz1, vcx2, vcy2, vcz2, err0, err1, err2, tmp;
 

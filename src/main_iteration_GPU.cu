@@ -33,12 +33,12 @@ void copyConstantData() {
     cudaErrorCheck(cudaMemcpyToSymbol(ez_d, ez, 19 * sizeof(int)));
     cudaErrorCheck(cudaMemcpyToSymbol(Z_porous_plate_d, &Z_porous_plate, sizeof(int)));
     cudaErrorCheck(cudaMemcpyToSymbol(porous_plate_cmd_d, &porous_plate_cmd, sizeof(int)));
-    cudaErrorCheck(cudaMemcpyToSymbol(num_solid_boundary_d, &num_solid_boundary, sizeof(int)));
-    cudaErrorCheck(cudaMemcpyToSymbol(num_fluid_boundary_d, &num_fluid_boundary, sizeof(int)));
+    cudaErrorCheck(cudaMemcpyToSymbol(num_solid_boundary_d, &num_solid_boundary, sizeof(long long)));
+    cudaErrorCheck(cudaMemcpyToSymbol(num_fluid_boundary_d, &num_fluid_boundary, sizeof(long long)));
     cudaErrorCheck(cudaMemcpyToSymbol(ISO4_d, ISO4, 2 * sizeof(T_P)));
-    cudaErrorCheck(cudaMemcpyToSymbol(nxGlobal_d, &nxGlobal, sizeof(int)));
-    cudaErrorCheck(cudaMemcpyToSymbol(nyGlobal_d, &nyGlobal, sizeof(int)));
-    cudaErrorCheck(cudaMemcpyToSymbol(nzGlobal_d, &nzGlobal, sizeof(int)));
+    cudaErrorCheck(cudaMemcpyToSymbol(nxGlobal_d, &nxGlobal, sizeof(long long)));
+    cudaErrorCheck(cudaMemcpyToSymbol(nyGlobal_d, &nyGlobal, sizeof(long long)));
+    cudaErrorCheck(cudaMemcpyToSymbol(nzGlobal_d, &nzGlobal, sizeof(long long)));
     cudaErrorCheck(cudaMemcpyToSymbol(phi_inlet_d, &phi_inlet, sizeof(T_P)));
     cudaErrorCheck(cudaMemcpyToSymbol(relaxation_d, &relaxation, sizeof(T_P)));
     cudaErrorCheck(cudaMemcpyToSymbol(sa_inject_d, &sa_inject, sizeof(T_P)));
@@ -1895,14 +1895,14 @@ void main_iteration_kernel_GPU() {
     if (ntime % 2 == 0) {
         /* ************************** even step ***************************************** */
         block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = block_Threads_Z;
-        grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = (nzGlobal + block.z - 1) / block.z;
-        kernel_even_color_GPU << <grid, block >> > (1, nxGlobal, 1, nyGlobal, 1, nzGlobal, walls_d, pdf_d, phi_d, cn_x_d, cn_y_d, cn_z_d, curv_d, c_norm_d);
+        grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = (int(nzGlobal) + block.z - 1) / block.z;
+        kernel_even_color_GPU << <grid, block >> > (1, int(nxGlobal), 1, int(nyGlobal), 1, int(nzGlobal), walls_d, pdf_d, phi_d, cn_x_d, cn_y_d, cn_z_d, curv_d, c_norm_d);
         cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
         /* ************************** even step ***************************************** */
         /* ************************** periodic boundary conditions  ***************************************** */
         if (kper) {
             block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-            grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+            grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
             perioidc_BC_Z_even << <grid, block >> > (pdf_d);
             cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
             periodic_phi_Z << <grid, block >> > (4, phi_d);
@@ -1910,7 +1910,7 @@ void main_iteration_kernel_GPU() {
         }
         if (jper) {
             block.x = block_Threads_X;    block.y = 1;    block.z = block_Threads_Z;
-            grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = 1; grid.z = (nzGlobal + block.z - 1) / block.z;   
+            grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = 1; grid.z = (int(nzGlobal) + block.z - 1) / block.z;   
             perioidc_BC_Y_even << <grid, block >> > (pdf_d);
             cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
             periodic_phi_Y << <grid, block >> > (4, phi_d);
@@ -1919,7 +1919,7 @@ void main_iteration_kernel_GPU() {
         }
         if (jper && kper) {
             block.x = block_Threads_X; block.y = 1; block.z = 1;
-            grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = 1; grid.z = 1;
+            grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = 1; grid.z = 1;
             perioidc_BC_ZY_even << <grid, block >> > (pdf_d);
             cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
             periodic_phi_ZY << <grid, block >> > (4, phi_d);
@@ -1930,23 +1930,23 @@ void main_iteration_kernel_GPU() {
         if (kper == 0 && domain_wall_status_z_min == 0 && domain_wall_status_z_max == 0) { // non - periodic BC along flow direction(z)
             if (inlet_BC == 1) {
                 block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-                grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+                grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
                 inlet_bounce_back_velocity_BC_before_odd_GPU << <grid, block >> > (walls_d, phi_d, pdf_d, W_in_d);
             }
             else if (inlet_BC == 2) {
                 block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-                grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+                grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
                 inlet_Zou_He_pressure_BC_before_odd_GPU << <grid, block >> > (rho_in, walls_d, phi_d, pdf_d); // pressure inlet bc
             }
             if (outlet_BC == 1) {
                 block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-                grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+                grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
                 outlet_convective_BC_before_odd_GPU << <grid, block >> > (walls_d, phi_d, phi_convec_bc_d, pdf_d, f_convec_bc_d, g_convec_bc_d);
             }
             else if (outlet_BC == 2) {
                 block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-                grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
-                //grid.x = ceil(double(nxGlobal) / double(block.x));   grid.y = ceil(double(nyGlobal) / double(block.y)); grid.z = 1;
+                grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
+                //grid.x = ceil(double(int(nxGlobal)) / double(block.x));   grid.y = ceil(double(int(nyGlobal)) / double(block.y)); grid.z = 1;
                 outlet_Zou_He_pressure_BC_before_odd_GPU << <grid, block >> > (rho_out, walls_d, phi_d, pdf_d); // pressure outlet bc
             }
             cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
@@ -1961,14 +1961,14 @@ void main_iteration_kernel_GPU() {
     else {
         /* ************************** odd step ***************************************** */
         block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = block_Threads_Z;
-        grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = (nzGlobal + block.z - 1) / block.z;
-        kernel_odd_color_GPU << <grid, block >> > (1, nxGlobal, 1, nyGlobal, 1, nzGlobal, walls_d, pdf_d, phi_d, cn_x_d, cn_y_d, cn_z_d, curv_d, c_norm_d);
+        grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = (int(nzGlobal) + block.z - 1) / block.z;
+        kernel_odd_color_GPU << <grid, block >> > (1, int(nxGlobal), 1, int(nyGlobal), 1, int(nzGlobal), walls_d, pdf_d, phi_d, cn_x_d, cn_y_d, cn_z_d, curv_d, c_norm_d);
         cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
         /* ************************** odd step ***************************************** */
         /* ************************** periodic boundary conditions  ***************************************** */
         if (kper) {
             block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-            grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+            grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
             perioidc_BC_Z_odd << <grid, block >> > (pdf_d);
             cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
             periodic_phi_Z << <grid, block >> > (4, phi_d);
@@ -1976,7 +1976,7 @@ void main_iteration_kernel_GPU() {
         }
         if (jper) {
             block.x = block_Threads_X;    block.y = 1;    block.z = block_Threads_Z;
-            grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = 1; grid.z = (nzGlobal + block.z - 1) / block.z;
+            grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = 1; grid.z = (int(nzGlobal) + block.z - 1) / block.z;
             perioidc_BC_Y_odd << <grid, block >> > (pdf_d);
             cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
             periodic_phi_Y << <grid, block >> > (4, phi_d);
@@ -1984,7 +1984,7 @@ void main_iteration_kernel_GPU() {
         }
         if (jper && kper) {
             block.x = block_Threads_X; block.y = 1; block.z = 1;
-            grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = 1; grid.z = 1;
+            grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = 1; grid.z = 1;
             perioidc_BC_ZY_odd << <grid, block >> > (pdf_d);
             cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
             periodic_phi_ZY << <grid, block >> > (4, phi_d);
@@ -1995,23 +1995,23 @@ void main_iteration_kernel_GPU() {
         if (kper == 0 && domain_wall_status_z_min == 0 && domain_wall_status_z_max == 0) { // non - periodic BC along flow direction(z)
             if (inlet_BC == 1) { // velocity inlet bc
                 block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-                grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+                grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
                 inlet_bounce_back_velocity_BC_after_odd_GPU << <grid, block >> > (walls_d, phi_d, pdf_d, W_in_d);
             }
             else if (inlet_BC == 2) { // pressure inlet bc
                 block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-                grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+                grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
                 inlet_Zou_He_pressure_BC_after_odd_GPU << <grid, block >> > (rho_in, walls_d, phi_d, pdf_d); // pressure inlet bc
             }
             if (outlet_BC == 1) { // convective outlet bc
                 block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-                grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+                grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
                 outlet_convective_BC_after_odd_GPU << <grid, block >> >
                     (walls_d, phi_d, phi_convec_bc_d, pdf_d, f_convec_bc_d, g_convec_bc_d);
             }
             else if (outlet_BC == 2) { // pressure outlet bc
                 block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = 1;
-                grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = 1;
+                grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = 1;
                 outlet_Zou_He_pressure_BC_after_odd_GPU << <grid, block >> > (rho_out, walls_d, phi_d, pdf_d);   // pressure outlet bc
             }
             cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
@@ -2028,28 +2028,28 @@ void main_iteration_kernel_GPU() {
 #pragma region (color gradient)
      /* ~~~~~~~~~~~~~~~~~~~~~~~ extrapolate phi values to solid boundary nodes ~~~~~~~~~~~~~~~~~~ */
     block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = block_Threads_Z;
-    grid.x = (nxGlobal + 6 + block.x - 1) / block.x; grid.y = (nyGlobal + 6 + block.y - 1) / block.y; grid.z = (nzGlobal + 6 + block.z - 1) / block.z;
+    grid.x = (int(nxGlobal) + 6 + block.x - 1) / block.x; grid.y = (int(nyGlobal) + 6 + block.y - 1) / block.y; grid.z = (int(nzGlobal) + 6 + block.z - 1) / block.z;
     extrapolate_phi_toSolid << <grid, block >> > (walls_type_d, phi_d);
     cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
     /* ~~~~~~~~~~~~~~~~~~ calculate normal directions of interfaces from phi gradient ~~~~~~~~~~~~~~~~~~ */
     block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = block_Threads_Z;
-    grid.x = (nxGlobal + 4 + block.x - 1) / block.x; grid.y = (nyGlobal + 4 + block.y - 1) / block.y; grid.z = (nzGlobal + 4 + block.z - 1) / block.z;
+    grid.x = (int(nxGlobal) + 4 + block.x - 1) / block.x; grid.y = (int(nyGlobal) + 4 + block.y - 1) / block.y; grid.z = (int(nzGlobal) + 4 + block.z - 1) / block.z;
     normalDirectionsOfInterfaces << < grid, block >> > (walls_d, phi_d, cn_x_d, cn_y_d, cn_z_d, c_norm_d);
     cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
     /* ~~~~~~~~~~~~~~~ numerically alter the normal directions of interfaces to desired contact angle ~~~~~~~~~~~~~~~~ */
     block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = block_Threads_Z;
-    grid.x = (nxGlobal + 4 + block.x - 1) / block.x; grid.y = (nyGlobal + 4 + block.y - 1) / block.y; grid.z = (nzGlobal + 4 + block.z - 1) / block.z;
+    grid.x = (int(nxGlobal) + 4 + block.x - 1) / block.x; grid.y = (int(nyGlobal) + 4 + block.y - 1) / block.y; grid.z = (int(nzGlobal) + 4 + block.z - 1) / block.z;
     alter_color_gradient_solid_surface_GPU << < grid, block >> > (walls_type_d, cn_x_d, cn_y_d, cn_z_d, c_norm_d, s_nx_d, s_ny_d, s_nz_d);
     cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
     /* ~~~~~~~~~~~~~~ extrapolate normal direction info to solid boundary nodes, to minimize unbalanced forces ~~~~~~~~~~~~~~ */
     block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = block_Threads_Z;
-    grid.x = (nxGlobal + 2 + block.x - 1) / block.x; grid.y = (nyGlobal + 2 + block.y - 1) / block.y; grid.z = (nzGlobal + 2 + block.z - 1) / block.z;
+    grid.x = (int(nxGlobal) + 2 + block.x - 1) / block.x; grid.y = (int(nyGlobal) + 2 + block.y - 1) / block.y; grid.z = (int(nzGlobal) + 2 + block.z - 1) / block.z;
     extrapolateNormalToSolid << <grid, block >> > (walls_type_d, cn_x_d, cn_y_d, cn_z_d, phi_d);
     cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
     /* ~~~~~~~~~~~~~~~~~~ calculate CSF forces based on interace curvature  ~~~~~~~~~~~~~~~~~~ */
     //block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = block_Threads_Z;
     block.x = block_Threads_X;    block.y = block_Threads_Y;    block.z = block_Threads_Z;
-    grid.x = (nxGlobal + block.x - 1) / block.x; grid.y = (nyGlobal + block.y - 1) / block.y; grid.z = (nzGlobal + block.z - 1) / block.z;
+    grid.x = (int(nxGlobal) + block.x - 1) / block.x; grid.y = (int(nyGlobal) + block.y - 1) / block.y; grid.z = (int(nzGlobal) + block.z - 1) / block.z;
     CSF_Forces << <grid, block >> > (cn_x_d, cn_y_d, cn_z_d, curv_d);
     cudaErrorCheck(cudaDeviceSynchronize()); cudaErrorCheck(cudaPeekAtLastError());
 #pragma endregion (color gradient)
