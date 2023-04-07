@@ -2058,10 +2058,10 @@ void main_iteration_kernel_GPU() {
     /* send results back to the host side */
     if (ntime % ntime_monitor == 0 || ntime % ntime_animation == 0 || ntime % ntime_visual == 0 || ntime % ntime_clock_sum == 0) {
         cout << "Copying results back to the host side .... ";
-        cudaErrorCheck(cudaMemcpy(u, u_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
-        cudaErrorCheck(cudaMemcpy(v, v_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
-        cudaErrorCheck(cudaMemcpy(w, w_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
-        cudaErrorCheck(cudaMemcpy(rho, rho_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
+        //cudaErrorCheck(cudaMemcpy(u, u_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
+        //cudaErrorCheck(cudaMemcpy(v, v_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
+        //cudaErrorCheck(cudaMemcpy(w, w_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
+        //cudaErrorCheck(cudaMemcpy(rho, rho_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
         cudaErrorCheck(cudaMemcpy(phi, phi_d, mem_size_s4_TP, cudaMemcpyDeviceToHost));
         cudaErrorCheck(cudaMemcpy(curv, curv_d, mem_size_s1_TP, cudaMemcpyDeviceToHost));
         cudaErrorCheck(cudaMemcpy(c_norm, c_norm_d, mem_size_s2_TP, cudaMemcpyDeviceToHost));

@@ -72,9 +72,9 @@ void MemAllocate_geometry_GPU(int flag) {
 // ************* fluid flow related memory allocate/deallocate ******************************
 void MemAllocate_multi_GPU(int flag) {
     if (flag == 1) {
-        cudaErrorCheck(cudaMalloc(&u_d, mem_size_s1_TP)); memory_gpu += mem_size_s1_TP; cudaErrorCheck(cudaMemcpy(u_d, u, mem_size_s1_TP, cudaMemcpyHostToDevice));
-        cudaErrorCheck(cudaMalloc(&v_d, mem_size_s1_TP)); memory_gpu += mem_size_s1_TP; cudaErrorCheck(cudaMemcpy(v_d, v, mem_size_s1_TP, cudaMemcpyHostToDevice));
-        cudaErrorCheck(cudaMalloc(&w_d, mem_size_s1_TP)); memory_gpu += mem_size_s1_TP; cudaErrorCheck(cudaMemcpy(w_d, w, mem_size_s1_TP, cudaMemcpyHostToDevice));
+        //cudaErrorCheck(cudaMalloc(&u_d, mem_size_s1_TP)); memory_gpu += mem_size_s1_TP; cudaErrorCheck(cudaMemcpy(u_d, u, mem_size_s1_TP, cudaMemcpyHostToDevice));
+        //cudaErrorCheck(cudaMalloc(&v_d, mem_size_s1_TP)); memory_gpu += mem_size_s1_TP; cudaErrorCheck(cudaMemcpy(v_d, v, mem_size_s1_TP, cudaMemcpyHostToDevice));
+        //cudaErrorCheck(cudaMalloc(&w_d, mem_size_s1_TP)); memory_gpu += mem_size_s1_TP; cudaErrorCheck(cudaMemcpy(w_d, w, mem_size_s1_TP, cudaMemcpyHostToDevice));
         cudaErrorCheck(cudaMalloc(&rho_d, mem_size_s1_TP)); memory_gpu += mem_size_s1_TP; cudaErrorCheck(cudaMemcpy(rho_d, rho, mem_size_s1_TP, cudaMemcpyHostToDevice));
         cudaErrorCheck(cudaMalloc(&curv_d, mem_size_s1_TP)); memory_gpu += mem_size_s1_TP; cudaErrorCheck(cudaMemcpy(curv_d, curv, mem_size_s1_TP, cudaMemcpyHostToDevice));
         cudaErrorCheck(cudaMalloc(&W_in_d, NXG1 * NYG1 * sizeof(T_P))); memory_gpu += NXG1 * NYG1 * sizeof(T_P); cudaErrorCheck(cudaMemcpy(W_in_d, W_in, NXG1 * NYG1 * sizeof(T_P), cudaMemcpyHostToDevice));
@@ -93,10 +93,10 @@ void MemAllocate_multi_GPU(int flag) {
 
     }
     else {
-        cudaErrorCheck(cudaFree(u_d));
-        cudaErrorCheck(cudaFree(v_d));
-        cudaErrorCheck(cudaFree(w_d));
-        //cudaErrorCheck(cudaFree(rho_d));
+        //cudaErrorCheck(cudaFree(u_d));
+        //cudaErrorCheck(cudaFree(v_d));
+        //cudaErrorCheck(cudaFree(w_d));
+        cudaErrorCheck(cudaFree(rho_d));
         cudaErrorCheck(cudaFree(curv_d));
         cudaErrorCheck(cudaFree(W_in_d));
         cudaErrorCheck(cudaFree(pdf_d));
