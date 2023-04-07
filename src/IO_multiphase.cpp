@@ -71,6 +71,9 @@ void read_parameter_multi() {
     READ_INT(FILE_simulation_control.c_str(), external_geometry_read_cmd); // 
     cout << "external_geometry_read_cmd:   " << external_geometry_read_cmd << endl;
     cout << "---------------------------" << endl;
+    READ_INT(FILE_simulation_control.c_str(), geometry_dims_type_size); if (geometry_dims_type_size != 4 && geometry_dims_type_size != 8) { ERROR("Incorrect geometry_dims_type_size!"); }
+    cout << "geometry_dims_type_size:   " << geometry_dims_type_size << endl;
+    cout << "---------------------------" << endl; 
     READ_INT(FILE_simulation_control.c_str(), geometry_preprocess_cmd); // 
     cout << "geometry_preprocess_cmd:   " << geometry_preprocess_cmd << endl;
     cout << "---------------------------" << endl;

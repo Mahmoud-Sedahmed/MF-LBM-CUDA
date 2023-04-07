@@ -144,9 +144,17 @@ void read_walls() {
     FILE* geom_file = fopen(fnc, "r");
     if (geom_file == NULL) { ERROR("Could not open the geometry file !"); }
 
-    if(!fread(&nx_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
-    if (!fread(&ny_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
-    if(!fread(&nz_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+    if (geometry_dims_type_size == 4) {
+        if (!fread(&nx_sample, sizeof(int), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+        if (!fread(&ny_sample, sizeof(int), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+        if (!fread(&nz_sample, sizeof(int), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+    }
+    else if (geometry_dims_type_size == 8) {
+        if (!fread(&nx_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+        if (!fread(&ny_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+        if (!fread(&nz_sample, sizeof(long long), 1, geom_file)) { ERROR("Could not load from the geometry file!"); }
+    }
+    
 
     cout << "Porous media sample size: nx = " << nx_sample << ", ny = " << ny_sample << ", nz = " << nz_sample << endl;
 

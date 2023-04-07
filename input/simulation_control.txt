@@ -59,12 +59,17 @@ convergence_criteria 1e-4
 output_fieldData_precision_cmd 0
 
 # Modify_geometry_cmd: 
-# 0 do not modify geometry; 1 modify geometry in the code (hard coding, Misc.F90) 
+# 0 do not modify geometry; 1 modify geometry in the code (hard coding, Misc.cpp) 
 modify_geometry_cmd 0
 
 # Use external geometry cmd:  
 # 0 - no; 1 - yes 
 external_geometry_read_cmd 1
+
+# choose type size of dimension variables saved in the geometry binary file:  
+# 4 - 4 bytes (int, uint, ..etc.); 8 - 8 bytes (long long, unint64, ...etc.)
+# (0) would be used in relatively small geometries (nxGlobal*nyGlobal*nzGlobal < 384^3), while (1) would be used in relatively large geometries (nxGlobal*nyGlobal*nzGlobal >= 384^3)
+geometry_dims_type_size 4
 
 # Geometry preprocess cmd: 
 # 0 - process the geometry boundary infor during the simulation (not recommended for 
@@ -205,7 +210,7 @@ initial_interface_position 8.0
 capillary_number 100e-6
 
 # initial value of body force or pressure gradient along z direction
-body_force_0 1e-5
+body_force_0 1e-4
 
 # override loading inlet density value from the checkpoint file and use a new value based on the pressure gradient 
 rho_in_new	1
@@ -220,7 +225,7 @@ target_fluid1_saturation 0.4
 
 #================================== timers ========================================
 # timer: max iterations, will be modified if target_inject_pore_volume > 0
-max_time_step 50000
+max_time_step 500000
 
 # timer: max iterations for benchmarking 
 max_time_step_benchmark 100
@@ -229,10 +234,10 @@ max_time_step_benchmark 100
 ntime_visual 5000000
 
 # timer: when to output animation (phase info only) data - overridden by d_vol_animation if d_vol_animation>0 
-ntime_animation 50000
+ntime_animation 10000
 
 # timer: when to output bulk property data - overridden by d_vol_monitor if d_vol_monitor>0 
-monitor_timer 50000
+monitor_timer 10000
 
 # timer: when to output profile data along flow direction (Z)
 # monitor_profile_timer = monitor_profile_timer_ratio * monitor_timer 
@@ -240,7 +245,7 @@ monitor_profile_timer_ratio 5
 
 # timer: gaps used to record computation time
 # it is also used to check the checkpoint data saving status
-computation_time_timer 50000
+computation_time_timer 10000
 
 # timer: when to display time steps
 display_steps_timer 10000

@@ -39,6 +39,9 @@ int external_geometry_read_cmd;
 // geometry preprocess cmd : 0 - process the geometry during the simulation; 1 - load external preprocessed geometry data
 int geometry_preprocess_cmd;
 
+// choose type size of dimension variables saved in the geometry binary file : 0 - 4 bytes(int, uint, ..etc.); 1 - 8 bytes(long long, unint64, ...etc.)
+int geometry_dims_type_size;
+
 // benchmarking simulation = 1; regular simulation = 0
 int benchmark_cmd;
 
