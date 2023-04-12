@@ -1275,15 +1275,15 @@ __global__ void outlet_convective_BC_before_odd_GPU(int* walls, T_P* phi, T_P* p
         pdf[i_f1(i, j + 1, nzGlobal_d + 1, 18, 0)] = ((f_convec_bc[icnv_f1(i, j, 18)] + u_convec * pdf[i_f1(i, j + 1, nzGlobal_d + 1 - 1, 18, 0)]) * temp)
             * (1 - wall_indicator) + pdf[i_f1(i, j + 1, nzGlobal_d + 1, 18, 0)] * wall_indicator;
 
-        pdf[i_f1(i, j, nzGlobal_d + 1, 6, 1)] = ((f_convec_bc[icnv_f1(i, j, 6)] + u_convec * pdf[i_f1(i, j, nzGlobal_d + 1 - 1, 6, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i, j, nzGlobal_d + 1, 6, 1)] = ((g_convec_bc[icnv_f1(i, j, 6)] + u_convec * pdf[i_f1(i, j, nzGlobal_d + 1 - 1, 6, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j, nzGlobal_d + 1, 6, 1)] * wall_indicator;
-        pdf[i_f1(i - 1, j, nzGlobal_d + 1, 13, 1)] = ((f_convec_bc[icnv_f1(i, j, 13)] + u_convec * pdf[i_f1(i - 1, j, nzGlobal_d + 1 - 1, 13, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i - 1, j, nzGlobal_d + 1, 13, 1)] = ((g_convec_bc[icnv_f1(i, j, 13)] + u_convec * pdf[i_f1(i - 1, j, nzGlobal_d + 1 - 1, 13, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i - 1, j, nzGlobal_d + 1, 13, 1)] * wall_indicator;
-        pdf[i_f1(i + 1, j, nzGlobal_d + 1, 14, 1)] = ((f_convec_bc[icnv_f1(i, j, 14)] + u_convec * pdf[i_f1(i + 1, j, nzGlobal_d + 1 - 1, 14, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i + 1, j, nzGlobal_d + 1, 14, 1)] = ((g_convec_bc[icnv_f1(i, j, 14)] + u_convec * pdf[i_f1(i + 1, j, nzGlobal_d + 1 - 1, 14, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i + 1, j, nzGlobal_d + 1, 14, 1)] * wall_indicator;
-        pdf[i_f1(i, j - 1, nzGlobal_d + 1, 17, 1)] = ((f_convec_bc[icnv_f1(i, j, 17)] + u_convec * pdf[i_f1(i, j - 1, nzGlobal_d + 1 - 1, 17, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i, j - 1, nzGlobal_d + 1, 17, 1)] = ((g_convec_bc[icnv_f1(i, j, 17)] + u_convec * pdf[i_f1(i, j - 1, nzGlobal_d + 1 - 1, 17, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j - 1, nzGlobal_d + 1, 17, 1)] * wall_indicator;
-        pdf[i_f1(i, j + 1, nzGlobal_d + 1, 18, 1)] = ((f_convec_bc[icnv_f1(i, j, 18)] + u_convec * pdf[i_f1(i, j + 1, nzGlobal_d + 1 - 1, 18, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i, j + 1, nzGlobal_d + 1, 18, 1)] = ((g_convec_bc[icnv_f1(i, j, 18)] + u_convec * pdf[i_f1(i, j + 1, nzGlobal_d + 1 - 1, 18, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j + 1, nzGlobal_d + 1, 18, 1)] * wall_indicator;
 
         f_convec_bc[icnv_f1(i, j, 6)] = pdf[i_f1(i, j, nzGlobal_d + 1, 6, 0)];
@@ -1331,15 +1331,15 @@ __global__ void outlet_convective_BC_after_odd_GPU(int* walls, T_P* phi, T_P* ph
         pdf[i_f1(i, j, nzGlobal_d, 16, 0)] = ((f_convec_bc[icnv_f1(i, j, 17)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 16, 0)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j, nzGlobal_d, 16, 0)] * wall_indicator;
 
-        pdf[i_f1(i, j, nzGlobal_d, 5, 1)] = ((f_convec_bc[icnv_f1(i, j, 6)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 5, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i, j, nzGlobal_d, 5, 1)] = ((g_convec_bc[icnv_f1(i, j, 6)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 5, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j, nzGlobal_d, 5, 1)] * wall_indicator;
-        pdf[i_f1(i, j, nzGlobal_d, 11, 1)] = ((f_convec_bc[icnv_f1(i, j, 14)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 11, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i, j, nzGlobal_d, 11, 1)] = ((g_convec_bc[icnv_f1(i, j, 14)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 11, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j, nzGlobal_d, 11, 1)] * wall_indicator;
-        pdf[i_f1(i, j, nzGlobal_d, 12, 1)] = ((f_convec_bc[icnv_f1(i, j, 13)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 12, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i, j, nzGlobal_d, 12, 1)] = ((g_convec_bc[icnv_f1(i, j, 13)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 12, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j, nzGlobal_d, 12, 1)] * wall_indicator;
-        pdf[i_f1(i, j, nzGlobal_d, 15, 1)] = ((f_convec_bc[icnv_f1(i, j, 18)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 15, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i, j, nzGlobal_d, 15, 1)] = ((g_convec_bc[icnv_f1(i, j, 18)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 15, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j, nzGlobal_d, 15, 1)] * wall_indicator;
-        pdf[i_f1(i, j, nzGlobal_d, 16, 1)] = ((f_convec_bc[icnv_f1(i, j, 17)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 16, 1)]) * temp) * (1 - wall_indicator)
+        pdf[i_f1(i, j, nzGlobal_d, 16, 1)] = ((g_convec_bc[icnv_f1(i, j, 17)] + u_convec * pdf[i_f1(i, j, nzGlobal_d - 1, 16, 1)]) * temp) * (1 - wall_indicator)
             + pdf[i_f1(i, j, nzGlobal_d, 16, 1)] * wall_indicator;
 
         f_convec_bc[icnv_f1(i, j, 6)] = pdf[i_f1(i, j, nzGlobal_d, 5, 0)];
